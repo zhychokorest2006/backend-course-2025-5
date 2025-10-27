@@ -1,0 +1,11 @@
+# GET (спроба отримати неіснуючий файл)
+curl -X GET http://localhost:3005/200 -o test.jpg
+
+# PUT (додати файл)
+curl -X PUT -T mycat.jpg http://localhost:3005/200
+
+# GET (отримати вже з кешу)
+curl -X GET http://localhost:3005/200 -o cached.jpg
+
+# DELETE (видалити з кешу)
+curl -X DELETE http://localhost:3005/200
