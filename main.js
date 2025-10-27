@@ -3,6 +3,7 @@ import { Command } from 'commander';
 import { existsSync } from 'fs';
 import fs from 'fs/promises';
 import path from 'path';
+import superagent from 'superagent';
 
 const program = new Command();
 program
@@ -28,9 +29,17 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { 'Content-Type': 'image/jpeg' });
       res.end(data);
     } catch {
-      res.writeHead(404);
-      res.end('Not Found');
-    }
+  try {
+    const response = await superagent.get(`https://http.cat/${code}`);
+    const img = response.body;
+    await fs.writeFile(filePath, img);
+    res.writeHead(200, { 'Content-Type': 'image/jpeg' });
+    res.end(img);
+  } catch {
+    res.writeHead(404);
+    res.end('Not Found');
+  }
+}
   } else if (req.method === 'PUT') {
     const chunks = [];
     for await (const chunk of req) chunks.push(chunk);
